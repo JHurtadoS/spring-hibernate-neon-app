@@ -38,7 +38,7 @@ La aplicación incluye una integración con Swagger, lo que permite a los desarr
    ```
    Por ejemplo:
    ```
-   http://ec2-52-204-25-137.compute-1.amazonaws.com:8080/swagger-ui.html
+   http://ec2-52-201-25-1111.compute-1.amazonaws.com:8080/swagger-ui.html
    ```
 2. Se mostrará una interfaz gráfica con todos los endpoints organizados por controlador.
 
