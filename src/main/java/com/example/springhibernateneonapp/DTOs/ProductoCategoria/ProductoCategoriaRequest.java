@@ -18,15 +18,12 @@ public class ProductoCategoriaRequest {
 
     private List<UUID> categoriasId;
 
-    // Constructor vacío requerido para la deserialización
     public ProductoCategoriaRequest() {}
 
     public List<UUID> getCategoriaIds() {
         return categoriasId;
     }
 
-
-    // Constructor con argumentos para inicializar los campos
     public ProductoCategoriaRequest(UUID productoId, UUID categoriaId, List<UUID> categoriasId) {
         this.productoId = productoId;
         this.categoriaId = categoriaId;

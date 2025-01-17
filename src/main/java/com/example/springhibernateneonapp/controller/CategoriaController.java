@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categorias")
-@SecurityRequirement(name = "bearerAuth") // Token requerido en Swagger
+@SecurityRequirement(name = "bearerAuth")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -64,7 +64,6 @@ public class CategoriaController {
                     Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)
             ));
 
-            // Filtra categorías habilitadas
             List<Categoria> categoriasHabilitadas = categoriasPage.getContent().stream()
                     .filter(Categoria::getEstado)
                     .toList();
@@ -105,19 +104,17 @@ public class CategoriaController {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String descripcion) {
         try {
-            // Manejar entrada desde JSON o form-data
+
             CategoriaRequest request = categoriaRequest != null
                     ? categoriaRequest
                     : new CategoriaRequest(nombre, descripcion);
 
-            // Validar campos obligatorios
             if (request.getNombre() == null || request.getNombre().isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "error", "El nombre de la categoría es obligatorio."
                 ));
             }
 
-            // Crear la categoría
             Categoria createdCategoria = categoriaService.createCategoria(request);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
@@ -144,7 +141,7 @@ public class CategoriaController {
     @PatchMapping("/{id}/disable")
     public ResponseEntity<?> disableCategoria(@PathVariable UUID id) {
         try {
-            // Deshabilitar la categoría a través del servicio
+
             Categoria disabledCategoria = categoriaService.disableCategoria(id);
 
             return ResponseEntity.ok(Map.of(
@@ -178,7 +175,7 @@ public class CategoriaController {
             @PathVariable UUID id,
             @RequestBody @Valid CategoriaUpdateRequest categoriaUpdateRequest) {
         try {
-            // Actualizar la categoría a través del servicio
+
             Categoria updatedCategoria = categoriaService.updateCategoria(id, categoriaUpdateRequest);
 
             return ResponseEntity.ok(Map.of(

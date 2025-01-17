@@ -1,6 +1,7 @@
 package com.example.springhibernateneonapp.repository;
 
 import com.example.springhibernateneonapp.entity.Categoria;
+import com.example.springhibernateneonapp.entity.Producto;
 import com.example.springhibernateneonapp.entity.ProductoCategoria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,9 @@ public interface ProductoCategoriaRepository extends JpaRepository<ProductoCateg
 
     @Query("SELECT pc.categoria FROM ProductoCategoria pc WHERE pc.producto.id = :productoId")
     List<Categoria> findCategoriasByProductoId(UUID productoId);
+
+    @Query("SELECT pc.producto FROM ProductoCategoria pc WHERE pc.categoria.id = :categoriaId")
+    List<Producto> findProductosByCategoriaId(UUID categoriaId);
+
+
 }

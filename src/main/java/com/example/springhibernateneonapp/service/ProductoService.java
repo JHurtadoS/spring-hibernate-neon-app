@@ -26,9 +26,7 @@ public class ProductoService {
         this.empresaRepository = empresaRepository;
     }
 
-    /**
-     * Crea un producto.
-     */
+
     public Producto createProducto(ProductoRequest productoRequest, UUID empresaId) {
         Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró la empresa con el ID: " + empresaId));
@@ -43,14 +41,11 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    /**
-     * Actualiza un producto.
-     */
+
     public Producto updateProducto(UUID id, ProductoUpdateRequest updateRequest) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró el producto con el ID: " + id));
 
-        // Actualizar solo los campos que no son nulos en la solicitud
         if (updateRequest.getNombre() != null) {
             producto.setNombre(updateRequest.getNombre());
         }
@@ -73,9 +68,6 @@ public class ProductoService {
     }
 
 
-    /**
-     * Deshabilita un producto (cambia su estado a false).
-     */
     public Producto disableProducto(UUID id) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró el producto con el ID: " + id));
@@ -84,23 +76,15 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    /**
-     * Obtiene un producto por ID, solo si está activo.
-     */
     public Optional<Producto> getProductoById(UUID id) {
         return productoRepository.findByIdAndEstadoTrue(id);
     }
 
-    /**
-     * Obtiene todos los productos activos de una empresa con paginación.
-     */
     public Page<Producto> getProductosByEmpresa(UUID empresaId, Pageable pageable) {
         return productoRepository.findActiveProductosByEmpresa(empresaId, pageable);
     }
 
-    /**
-     * Obtiene todos los productos activos con paginación.
-     */
+
     public Page<Producto> getAllActiveProductos(Pageable pageable) {
         return productoRepository.findAll(pageable);
     }

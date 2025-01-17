@@ -42,10 +42,10 @@ public class OrdenController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<?> createOrden(@RequestBody @Valid OrdenRequest ordenRequest) {
         try {
-            // Llama al servicio para crear la orden
+
             Ordene createdOrden = ordenService.createOrden(ordenRequest);
 
-            // Retorna respuesta exitosa
+
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "message", "Orden creada exitosamente",
                     "id", createdOrden.getId()

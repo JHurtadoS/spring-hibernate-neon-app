@@ -26,9 +26,6 @@ public class ProductoCategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    /**
-     * Crea una nueva relación entre un producto y una categoría.
-     */
     @Transactional
     public ProductoCategoria createProductoCategoria(ProductoCategoriaRequest request) {
         Producto producto = productoRepository.findById(request.getProductoId())
@@ -44,9 +41,6 @@ public class ProductoCategoriaService {
         return productoCategoriaRepository.save(productoCategoria);
     }
 
-    /**
-     * Actualiza una relación existente entre un producto y una categoría.
-     */
     @Transactional
     public ProductoCategoria updateProductoCategoria(UUID id, ProductoCategoriaUpdateRequest request) {
         ProductoCategoria productoCategoria = productoCategoriaRepository.findById(id)
@@ -67,9 +61,6 @@ public class ProductoCategoriaService {
         return productoCategoriaRepository.save(productoCategoria);
     }
 
-    /**
-     * Elimina una relación entre un producto y una categoría.
-     */
     @Transactional
     public void deleteProductoCategoria(UUID id) {
         if (!productoCategoriaRepository.existsById(id)) {
@@ -106,11 +97,8 @@ public class ProductoCategoriaService {
                 .toList();
     }
 
-
-
-
     public void associateProductoWithCategorias(ProductoCategoriaRequest request) {
-        // Validar que solo uno de los dos campos esté presente
+
         if (request.getCategoriaId() != null && request.getCategoriaIds() != null) {
             throw new IllegalArgumentException("No se puede proporcionar 'categoriaId' y 'categoriaIds' al mismo tiempo.");
         }
@@ -118,12 +106,12 @@ public class ProductoCategoriaService {
             throw new IllegalArgumentException("Debe proporcionar 'categoriaId' o 'categoriaIds'.");
         }
 
-        // Obtener el producto por ID
+
         Producto producto = productoRepository.findById(request.getProductoId())
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró el producto con ID: " + request.getProductoId()));
 
         if (request.getCategoriaId() != null) {
-            // Asociar una sola categoría
+
             Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
                     .orElseThrow(() -> new IllegalArgumentException("No se encontró la categoría con ID: " + request.getCategoriaId()));
 
@@ -133,7 +121,7 @@ public class ProductoCategoriaService {
             productoCategoriaRepository.save(productoCategoria);
 
         } else if (request.getCategoriaIds() != null) {
-            // Asociar múltiples categorías
+
             List<Categoria> categorias = categoriaRepository.findAllById(request.getCategoriaIds());
             if (categorias.size() != request.getCategoriaIds().size()) {
                 throw new IllegalArgumentException("Algunas categorías proporcionadas no existen.");
@@ -151,4 +139,11 @@ public class ProductoCategoriaService {
             productoCategoriaRepository.saveAll(productoCategorias);
         }
     }
+
+    public List<Producto> getProductosByCategoriaId(UUID categoriaId) {
+        return productoCategoriaRepository.findProductosByCategoriaId(categoriaId);
+    }
+
+
+
 }

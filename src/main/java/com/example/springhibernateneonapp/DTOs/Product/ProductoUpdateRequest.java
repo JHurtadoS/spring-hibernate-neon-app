@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor // Constructor vacío para frameworks como Jackson
-@AllArgsConstructor // Constructor completo para inicialización manual
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductoUpdateRequest {
     @Size(max = 255, message = "El nombre no puede exceder los 255 caracteres.")
     private String nombre;
@@ -23,5 +23,5 @@ public class ProductoUpdateRequest {
 
     private Integer stock;
 
-    private UUID empresaId; // Permitir cambiar la empresa si es necesario
+    private UUID empresaId;
 }

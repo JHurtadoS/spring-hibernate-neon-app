@@ -1,6 +1,7 @@
 package com.example.springhibernateneonapp.controller;
 
 import com.example.springhibernateneonapp.DTOs.ProductoCategoria.ProductoCategoriaRequest;
+import com.example.springhibernateneonapp.entity.Producto;
 import com.example.springhibernateneonapp.entity.ProductoCategoria;
 import com.example.springhibernateneonapp.service.ProductoCategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,6 +100,35 @@ public class ProductoCategoriaController {
             }
 
             return ResponseEntity.ok(categorias);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "error", "Error interno del servidor",
+                    "details", e.getMessage()
+            ));
+        }
+    }
+
+    @Operation(summary = "Obtener todos los productos asociados a una categoría",
+            description = "Devuelve todos los productos que pertenecen a una categoría específica.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Productos encontrados",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = "[{\"id\": \"UUID\", \"nombre\": \"Producto A\"}, {\"id\": \"UUID\", \"nombre\": \"Producto B\"}]"))),
+            @ApiResponse(responseCode = "404", description = "No se encontraron productos asociados a la categoría"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @GetMapping("/categoria/{categoriaId}/productos")
+    public ResponseEntity<?> getProductosByCategoriaId(@PathVariable UUID categoriaId) {
+        try {
+            List<Producto> productos = productoCategoriaService.getProductosByCategoriaId(categoriaId);
+            if (productos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                        "error", "No se encontraron productos asociados a la categoría",
+                        "categoriaId", categoriaId
+                ));
+            }
+
+            return ResponseEntity.ok(productos);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "error", "Error interno del servidor",

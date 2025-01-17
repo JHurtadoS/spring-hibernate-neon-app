@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/productos")
-@SecurityRequirement(name = "bearerAuth") // Token requerido en Swagger
+@SecurityRequirement(name = "bearerAuth")
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -46,8 +46,8 @@ public class ProductoController {
     public ResponseEntity<Object> getProductoById(@PathVariable UUID id) {
         try {
             return productoService.getProductoById(id)
-                    .filter(producto -> producto.getStock() > 0) // Verifica que el stock sea mayor a 0
-                    .<ResponseEntity<Object>>map(ResponseEntity::ok) // Devuelve el producto si está habilitado
+                    .filter(producto -> producto.getStock() > 0)
+                    .<ResponseEntity<Object>>map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                             "error", "Producto no encontrado o deshabilitado",
                             "id", id
@@ -81,7 +81,7 @@ public class ProductoController {
                     Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)
             ));
 
-            // Filtra solo productos habilitados (stock mayor a 0)
+
             List<Producto> productosHabilitados = productosPage.getContent().stream()
                     .filter(producto -> producto.getStock() > 0)
                     .toList();
@@ -172,21 +172,21 @@ public class ProductoController {
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) BigDecimal precio,
             @RequestParam(required = false) Integer stock,
-            @RequestParam UUID empresaId) { // `empresaId` ahora es obligatorio
+            @RequestParam UUID empresaId) {
         try {
-            // Manejar entrada desde JSON o form-data
+
             ProductoRequest request = productoRequest != null
                     ? productoRequest
                     : new ProductoRequest(nombre, descripcion, precio, stock, empresaId);
 
-            // Validar campos obligatorios
+
             if (request.getNombre() == null || request.getPrecio() == null || request.getStock() == null ) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "error", "Faltan datos obligatorios. Los campos 'nombre', 'precio', 'stock'"
                 ));
             }
 
-            // Crear el producto
+
             Producto createdProducto = productoService.createProducto(request, empresaId);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
@@ -221,19 +221,19 @@ public class ProductoController {
             @RequestParam(required = false) Integer stock,
             @RequestParam(required = false) UUID empresaId) {
         try {
-            // Manejar entrada desde JSON o form-data
+
             ProductoUpdateRequest request = productoRequest != null
                     ? productoRequest
                     : new ProductoUpdateRequest(nombre, descripcion, precio, stock, empresaId);
 
-            // Validar campos obligatorios
+
             if (request.getNombre() == null && request.getPrecio() == null &&  request.getStock() == null) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "error", "Faltan datos. 'nombre' y/o 'precio', y/o 'stock'"
                 ));
             }
 
-            // Actualizar el producto
+
             Producto updatedProducto = productoService.updateProducto(id, request);
 
             return ResponseEntity.ok(Map.of(
@@ -265,7 +265,7 @@ public class ProductoController {
     @PatchMapping("/{id}/disable")
     public ResponseEntity<?> disableProducto(@PathVariable UUID id) {
         try {
-            // Deshabilitar el producto
+
             Producto disabledProducto = productoService.disableProducto(id);
 
             return ResponseEntity.ok(Map.of(

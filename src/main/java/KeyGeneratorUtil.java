@@ -12,15 +12,13 @@ public class KeyGeneratorUtil {
      * @return A Base64 encoded key.
      */
     public static String generateSecretKey() {
-        // Generate a secure key for HS256
         SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        // Return the Base64 encoded key
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
     public static void main(String[] args) {
         try {
-            // Generate and display the secure key
+
             String secretKey = generateSecretKey();
             System.out.println("Generated Secret Key: " + secretKey);
             System.out.println("Copy this key to your configuration file for JWT usage.");

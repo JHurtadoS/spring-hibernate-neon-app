@@ -37,7 +37,7 @@ public class Empresa {
     @Column(name = "updated_at")
     private Instant updatedAt = Instant.now();
 
-    // Getters y Setters
+
     public UUID getId() {
         return id;
     }

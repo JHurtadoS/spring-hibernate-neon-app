@@ -28,11 +28,9 @@ public class ProductoRequest {
 //    @NotNull(message = "El ID de la empresa es obligatorio.")
 //    private UUID empresaId;
 
-    // Constructor vacío (necesario para frameworks como Jackson)
     public ProductoRequest() {
     }
 
-    // Constructor completo
     public ProductoRequest(String nombre, String descripcion, BigDecimal precio, Integer stock, UUID empresaId) {
         this.nombre = nombre;
         this.descripcion = descripcion;

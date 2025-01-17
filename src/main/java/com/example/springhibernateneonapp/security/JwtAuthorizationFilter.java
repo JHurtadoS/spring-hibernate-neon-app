@@ -28,7 +28,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Extract the Authorization header
+
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -36,16 +36,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get the token from the header
+
         String token = authHeader.substring(7);
 
         try {
-            // Validate the token and extract username and claims
+
             String username = jwtUtil.validateAndExtractUsername(token);
             Boolean isAdmin = jwtUtil.extractIsAdmin(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // Set authentication in the context
+
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         new User(username, "", Collections.emptyList()),
                         null,
@@ -54,7 +54,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                // Optional: Log admin claims
+
                 if (Boolean.TRUE.equals(isAdmin)) {
                     request.setAttribute("isAdmin", true);
                 }

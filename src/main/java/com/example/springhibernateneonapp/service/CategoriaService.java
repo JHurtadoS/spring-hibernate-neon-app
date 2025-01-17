@@ -22,9 +22,7 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    /**
-     * Crear una nueva categoría.
-     */
+
     public Categoria createCategoria(CategoriaRequest categoriaRequest) {
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaRequest.getNombre());
@@ -33,23 +31,17 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
-    /**
-     * Obtener una categoría por ID.
-     */
+
     public Optional<Categoria> getCategoriaById(UUID id) {
         return categoriaRepository.findById(id);
     }
 
-    /**
-     * Obtener todas las categorías habilitadas con soporte para paginación y ordenamiento.
-     */
+
     public Page<Categoria> getAllCategorias(Pageable pageable) {
         return categoriaRepository.findByEstadoTrue(pageable);
     }
 
-    /**
-     * Actualizar una categoría por ID.
-     */
+
     public Categoria updateCategoria(UUID id, CategoriaUpdateRequest categoriaUpdateRequest) {
         Optional<Categoria> optionalCategoria = categoriaRepository.findById(id);
 
@@ -59,7 +51,6 @@ public class CategoriaService {
 
         Categoria categoria = optionalCategoria.get();
 
-        // Actualizar solo los campos proporcionados
         if (categoriaUpdateRequest.getNombre() != null) {
             categoria.setNombre(categoriaUpdateRequest.getNombre());
         }
@@ -73,9 +64,7 @@ public class CategoriaService {
         return categoriaRepository.save(categoria);
     }
 
-    /**
-     * Deshabilitar una categoría (cambiar su estado a false).
-     */
+
     public Categoria disableCategoria(UUID id) {
         Optional<Categoria> optionalCategoria = categoriaRepository.findById(id);
 

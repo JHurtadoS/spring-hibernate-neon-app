@@ -24,7 +24,7 @@ import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/empresas")
-@SecurityRequirement(name = "bearerAuth") // Token requerido en Swagger
+@SecurityRequirement(name = "bearerAuth")
 public class EmpresaController {
 
     private final EmpresaService empresaService;
@@ -45,8 +45,8 @@ public class EmpresaController {
     public ResponseEntity<Object> getEmpresaById(@PathVariable UUID id) {
         try {
             return empresaService.getEmpresaById(id)
-                    .filter(Empresa::getEstado) // Verifica si el estado es true
-                    .<ResponseEntity<Object>>map(ResponseEntity::ok) // Devuelve la empresa si está habilitada
+                    .filter(Empresa::getEstado)
+                    .<ResponseEntity<Object>>map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                             "error", "Empresa no encontrada o deshabilitada",
                             "id", id
@@ -80,9 +80,9 @@ public class EmpresaController {
                     Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy)
             ));
 
-            // Filtra solo empresas habilitadas
+
             List<Empresa> empresasHabilitadas = empresasPage.getContent().stream()
-                    .filter(Empresa::getEstado) // Verifica el estado
+                    .filter(Empresa::getEstado)
                     .toList();
 
             if (empresasHabilitadas.isEmpty()) {
@@ -118,14 +118,14 @@ public class EmpresaController {
     })
     @PostMapping(consumes = {"application/json", "multipart/form-data"})
     public ResponseEntity<?> createEmpresa(
-            @RequestBody(required = false) EmpresaRequest empresaRequest, // Manejo para JSON
-            @RequestParam(required = false) String nombre,                // Manejo para form-data
+            @RequestBody(required = false) EmpresaRequest empresaRequest,
+            @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String nit,
             @RequestParam(required = false) String direccion,
             @RequestParam(required = false) String telefono) {
 
         try {
-            // Determinar la entrada válida
+
             if (empresaRequest == null && (nombre == null || nit == null)) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "error", "Faltan datos obligatorios: 'nombre' y 'nit' son requeridos."
@@ -136,7 +136,7 @@ public class EmpresaController {
                     ? empresaRequest
                     : new EmpresaRequest(nombre, nit, direccion, telefono);
 
-            // Crear la empresa
+
             Empresa createdEmpresa = empresaService.createEmpresa(request);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
