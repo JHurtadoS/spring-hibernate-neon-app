@@ -42,6 +42,7 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Credenciales inválidas"),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
+
     @PostMapping(value = "/login", consumes = "application/json")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -50,6 +51,12 @@ public class AuthController {
                 return ResponseEntity.status(401).body("Credenciales inválidas.");
             }
 
+            // Validamos si el perfil del usuario es null
+            if (user.getUserProfile() == null) {
+                return ResponseEntity.status(400).body("El usuario no tiene un perfil asociado.");
+            }
+
+            // Recuperar el valor de isAdmin
             String token = jwtUtil.generateToken(user.getEmail(), user.getUserProfile().getIsAdmin());
 
             Map<String, String> response = new HashMap<>();
@@ -58,6 +65,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            // Capturamos excepciones inesperadas
             return ResponseEntity.status(500).body("Error interno del servidor: " + e.getMessage());
         }
     }
